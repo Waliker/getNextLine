@@ -1,21 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndelest <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/30 18:07:01 by ndelest           #+#    #+#             */
-/*   Updated: 2017/12/02 20:54:02 by ndelest          ###   ########.fr       */
+/*   Created: 2017/11/14 19:00:02 by ndelest           #+#    #+#             */
+/*   Updated: 2017/11/19 17:18:39 by ndelest          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# include "libft/libft.h"
-# include <fcntl.h>
-# define BUFF_SIZE 10
+static void	ft_printnbr(int nb)
+{
+	if (nb >= 10 || nb <= -10)
+	{
+		ft_printnbr(nb / 10);
+		ft_printnbr(nb % 10);
+	}
+	else if (nb < 0)
+	{
+		nb = -nb + 48;
+		ft_putchar(nb);
+	}
+	else
+	{
+		nb = nb + 48;
+		ft_putchar(nb);
+	}
+}
 
-int		get_next_line(const int fd, char **line);
-#endif
+void		ft_putnbr(int n)
+{
+	if (n >= 0)
+		ft_printnbr(n);
+	else
+	{
+		ft_putchar('-');
+		ft_printnbr(n);
+	}
+}

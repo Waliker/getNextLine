@@ -1,21 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ndelest <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/30 18:07:01 by ndelest           #+#    #+#             */
-/*   Updated: 2017/12/02 20:54:02 by ndelest          ###   ########.fr       */
+/*   Created: 2017/11/14 19:30:36 by ndelest           #+#    #+#             */
+/*   Updated: 2017/11/18 14:45:09 by ndelest          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# include "libft/libft.h"
-# include <fcntl.h>
-# define BUFF_SIZE 10
+char	*ft_strnstr(const char *big, const char *little, size_t l)
+{
+	size_t	i;
+	size_t	j;
 
-int		get_next_line(const int fd, char **line);
-#endif
+	i = 0;
+	if (little[i] == 0)
+		return ((char *)big);
+	while (big[i] != 0 && i < l)
+	{
+		j = 0;
+		while (big[i + j] == little[j] && little[j] != 0 && (i + j) < l)
+			j++;
+		if (little[j] == 0)
+			return ((char *)(big + i));
+		i++;
+	}
+	return (NULL);
+}
