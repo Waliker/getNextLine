@@ -6,26 +6,33 @@
 /*   By: ndelest <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 15:24:03 by ndelest           #+#    #+#             */
-/*   Updated: 2017/12/02 22:06:13 by ndelest          ###   ########.fr       */
+/*   Updated: 2017/12/07 20:34:16 by ndelest          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t		ft_linecopy(char **line, char **buff, size_t i)
+static void	ft_checkContent(t_getLine *list)
 {
-	size_t	j;
+	int		i;
 
-	j = i;
-	while ((*buff)[i] != 0 && (*buff)[i] != '\n')
-		++i;
-	*line = ft_strnew(i - j);
-	*line = ft_strncpy(*line, &(*buff)[j], (i - j));
-
-	return (i);
+	i = 0;
+	while (i < BUFF_SIZE && ((char *)(list->lst->content))[i] != '\n')
+		i++;
+	if (i < BUFF_SIZE)
+	{
+		list->line_size = -1;
+		ft_memset(list->lst->content, 0, i);
+		((char *)(list->lst->content))[i] = 0; 
+	}
+	else
+	{
+		list->line_size = 0;
+		ft_memset(list->lst->content, 0, i);
+	}
 }
 
-static char	*ft_resizebuffer(char **buff, int count)
+static char	*ft_resizeline(char **buff, int count)
 {
 	char *tmp;
 
@@ -37,52 +44,76 @@ static char	*ft_resizebuffer(char **buff, int count)
 	return (*buff);
 }
 
+static size_t		ft_linecopy(char **line, t_getLine *list)
+{
+	int		ret;
+	int		i;
+	char	*ptr;
+	char	buff[BUFF_SIZE];
+
+	ret = 1;
+	i = 0;
+	ptr = NULL;
+	ft_memset(buff, 0, BUFF_SIZE);
+	if (list->line_size == 0)
+		*line = ft_strnew(BUFF_SIZE);
+	if ((ret = read(list->fd, buff, BUFF_SIZE)) == -1)
+		return (ret);
+	while ((*line)[i] != 0)
+		i++;
+	list->lst = ft_lstnew((const void *)buff, BUFF_SIZE);
+	ptr = (char *)ft_memccpy(*line + i, list->lst->content, '\n', BUFF_SIZE); 
+	if (ptr == NULL && ret > 0)
+	{
+		list->line_size++;
+		*line = ft_resizeline(line, list->line_size);
+		ft_linecopy(line, list);
+	}
+	else if (ptr != NULL)
+		*(ptr - 1) = 0;
+	return ((ret == 0) ? ret : 1);
+}
+
 int		get_next_line(const int fd, char **line)
 {
-	static char		*buff;
-	int				nbread;
-	int				count;
-	static size_t	i;
+	static t_getLine	*list;
+	int					ret;
+	int					i;
+	char				*ptr;
 
-	count = 0;
-	nbread = 1;
 	if (line == NULL)
 		return (-1);
-	if (!i || buff == NULL)
-	{
-		i = 0;
-		//		ft_putstr("je vais read le fd !\n");
-		buff = ft_strnew(BUFF_SIZE);
-		while ((nbread = read(fd, &buff[BUFF_SIZE * count], BUFF_SIZE)) > 0)
-		{
-			buff[(BUFF_SIZE * count) + nbread] = 0;
-			count++;
-			buff = ft_resizebuffer(&buff, count);
-		}
-		if (nbread < 0)
-		{
-			ft_strdel(&buff);
-			return (-1);
-		}
-	}
-	ft_putnbr(i);
-	ft_putchar('\n');
-	if (buff != NULL)
-	{
-		i = ft_linecopy(line, &buff, i);
-		//		ft_putstr("le buffer en sortie de linecopy :\n");
-		//		ft_putstr(buff);
-		//		ft_putchar('\n');
-		//		ft_putnbr(i);
 
-	}
-	if ((buff && buff[i] == 0) || (nbread == 0 && count < 2))
+	i = 0;
+	if (!list)
 	{
-		ft_strdel(&buff);
-		//		ft_putstr("je vais retourner 0 apres avoir free le buff\n");
-		return (0);
+		list = (t_getLine *)malloc(sizeof(*list));
+		list->fd = fd;
+		list->line_size = 0;
 	}
-	if (buff[i] != 0)
-		i++;
-	return (1);
+	if (list->line_size == -1)
+	{
+		while (((char *)(list->lst->content))[i] == 0 && i < BUFF_SIZE)
+			i++;
+		if (i < BUFF_SIZE)
+		{
+			*line = ft_strnew(BUFF_SIZE - i);
+			if ((ptr = ft_memccpy(*line, &(list->lst->content[i]), '\n', BUFF_SIZE - i)) != NULL)
+			{
+				*(ptr - 1) = 0;
+				ft_checkContent(list);
+				return (1);
+			}
+			list->line_size = 1;
+			*line = ft_resizeline(line, list->line_size);
+		}
+		else
+			list->line_size = 0;
+	}
+	ret = ft_linecopy(line, list);
+	if (ret == 1)
+		ft_checkContent(list);
+	ft_putendl("nouvelle ligne");
+	ft_putendl(*line);
+	return (ret);
 }
