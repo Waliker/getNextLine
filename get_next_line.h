@@ -6,7 +6,7 @@
 /*   By: ndelest <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 18:07:01 by ndelest           #+#    #+#             */
-/*   Updated: 2017/12/07 18:29:50 by ndelest          ###   ########.fr       */
+/*   Updated: 2017/12/09 21:16:13 by ndelest          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 # include <fcntl.h>
 # define BUFF_SIZE 10
 
-typedef	struct			s_getLine
+typedef	struct			s_line
 {
-	t_list				*lst;
+	char				*rem;
 	int					fd;
-	int					line_size;
-}						t_getLine;				
+	int					i;
+}						t_line;				
 int		get_next_line(const int fd, char **line);
 #endif
