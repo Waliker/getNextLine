@@ -6,7 +6,7 @@
 /*   By: ndelest <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 18:47:59 by ndelest           #+#    #+#             */
-/*   Updated: 2017/12/10 00:15:30 by ndelest          ###   ########.fr       */
+/*   Updated: 2017/12/10 16:08:20 by ndelest          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ int		main(int argc, char **argv)
 		ft_putendl("Je suis dans le main");
 		while (get_next_line(fd, &line) > 0)
 		{
-			write(fd2, line, strlen(line));
+			write(fd2, line, ft_strlen(line));
 //			write(fd2, &n, 1);
 			free(line);
-			ft_putchar('c');
 		}
+		ft_putstr(line);
 		free(line);
 		close(fd);
 		close(fd2);
