@@ -6,7 +6,7 @@
 /*   By: ndelest <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 13:40:14 by ndelest           #+#    #+#             */
-/*   Updated: 2017/11/19 13:08:21 by ndelest          ###   ########.fr       */
+/*   Updated: 2017/12/07 15:44:20 by ndelest          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 	}
 	else
 	{
-		if (!(new->content = malloc(sizeof(*(new->content)) * content_size)))
+		if (!(new->content = ft_memalloc(content_size)))
 		{
 			free(new);
 			return (NULL);

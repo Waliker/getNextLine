@@ -6,7 +6,7 @@
 /*   By: ndelest <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 18:07:01 by ndelest           #+#    #+#             */
-/*   Updated: 2017/12/09 21:16:13 by ndelest          ###   ########.fr       */
+/*   Updated: 2017/12/14 22:10:48 by ndelest          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "libft/libft.h"
 # include <fcntl.h>
-# define BUFF_SIZE 10
+# define BUFF_SIZE 11
 
 typedef	struct			s_line
 {
